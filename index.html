@@ -1486,7 +1486,16 @@ function initMap(){
     setTimeout(()=>l.style.display='none',500);
   },900);
 
-  fetchSubwayFromOSM().then(()=>{}).catch(()=>{});/* OSM 비활성화 */
+fetchSubwayFromOSM()
+    .then(data=>{
+      if(data&&data.elements&&data.elements.length>0){
+        lineLayers.forEach(l=>map.removeLayer(l));
+        lineLayers=[];
+        lineGroups=[];
+        drawOSMLines(data);
+      }
+    })
+    .catch(()=>{});
 }
 
 const EXITS={
