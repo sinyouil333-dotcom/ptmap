@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)file:///C:/Users/%EC%8B%A0%EC%9C%A0%EC%9D%BC/Downloads/index_21.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>피티맵 — 내 주변 가성비 PT 찾기</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0D12;--bg2:#13151C;--bg3:#1C1F2A;--bg4:#242837;
+  --border:#2A2D3E;--border2:#353850;
+  --orange:#FF5500;--orangeL:#FF7733;
+  --yellow:#FFD600;--green:#00E676;--text:#F0F2FF;--text2:#8890AA;--text3:#555D7A;
+  --sw:320px;
+}
+html,body{height:100%;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+
+/* 로딩 */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
+.ll{font-family:'Black Han Sans',sans-serif;font-size:52px;color:#FF5500}
+.ll span{color:var(--text)}
+.ls{font-size:13px;color:var(--text2);margin-top:8px}
+.lb{width:160px;height:3px;background:var(--border);border-radius:3px;margin-top:20px;overflow:hidden}
+.lbi{height:100%;background:linear-gradient(90deg,#FF5500,#FF7733);animation:lbar 1.5s ease-out forwards}
+@keyframes lbar{from{width:0}to{width:100%}}
+
+/* 네브바 */
+#navbar{position:fixed;top:0;left:0;right:0;height:54px;z-index:1000;background:rgba(11,13,18,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:10px}
+.logo{font-family:'Black Han Sans',sans-serif;font-size:24px;color:#FF5500;letter-spacing:-1px;flex-shrink:0}
+.logo span{color:var(--text)}
+.nav-badge{background:rgba(255,85,0,.15);border:1px solid rgba(255,85,0,.4);color:#FF5500;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px}
+.tagline{font-size:11px;color:var(--text2);border-left:1px solid var(--border);padding-left:12px;white-space:nowrap}
+.nav-right{margin-left:auto;display:flex;gap:6px;align-items:center}
+.nbtn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap}
+.nbtn:hover{border-color:#FF5500;color:#FF5500}
+.nbtn.pri{background:#FF5500;border-color:#FF5500;color:#fff}
+#btn-sb{display:none}
+
+/* 칩바 */
+#chipbar{position:fixed;top:54px;left:0;right:0;z-index:998;background:rgba(11,13,18,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px;padding:6px 14px 7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#chipbar::-webkit-scrollbar{display:none}
+.chip-label{font-size:11px;color:var(--text2);font-weight:700;flex-shrink:0}
+.chip-sep{width:1px;height:12px;background:var(--border);flex-shrink:0;margin:0 2px}
+.chip{display:flex;align-items:center;gap:3px;padding:4px 10px;border-radius:16px;border:1.5px solid var(--border);background:var(--bg3);font-size:10px;font-weight:600;color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Noto Sans KR',sans-serif;flex-shrink:0}
+.chip:hover{border-color:#FF5500;color:#FF5500}
+#c-legend.on{background:linear-gradient(90deg,#9B3DFF,#6A1FBE)!important;border-color:#9B3DFF!important;color:#FFD700!important;transform:scale(1.08)}
+#c-veteran.on{background:linear-gradient(90deg,#FF6B00,#FF9500)!important;border-color:#FF6B00!important;color:#fff!important;transform:scale(1.08)}
+#c-award.on{background:linear-gradient(90deg,#CC8800,#FFD700)!important;border-color:#CC8800!important;color:#fff!important;transform:scale(1.08)}
+#c-cert.on{background:linear-gradient(90deg,#4A5568,#2D3748)!important;border-color:#778899!important;color:#fff!important;transform:scale(1.08)}
+#c-influencer.on{background:linear-gradient(90deg,#7B2FFF,#00D4FF)!important;border-color:#7B2FFF!important;color:#fff!important;transform:scale(1.08)}
+#c-women.on{background:linear-gradient(90deg,#FF6FA8,#CC3377)!important;border-color:#FF6FA8!important;color:#fff!important;transform:scale(1.08)}
+#c-rehab.on{background:linear-gradient(90deg,#00A84D,#007A38)!important;border-color:#00A84D!important;color:#fff!important;transform:scale(1.08)}
+#c-nosmoking.on{background:linear-gradient(90deg,#2D6A4F,#1B4332)!important;border-color:#52B788!important;color:#fff!important;transform:scale(1.08)}
+#c-notattoo.on{background:linear-gradient(90deg,#6D4C8E,#4A2F6B)!important;border-color:#9B72CF!important;color:#fff!important;transform:scale(1.08)}
+#c-manager.on{background:linear-gradient(90deg,#7A5C00,#5C4500)!important;border-color:#D4A800!important;color:#FFE566!important;transform:scale(1.08)}
+#c-popular.on{background:linear-gradient(90deg,#0077CC,#0055AA)!important;border-color:#0077CC!important;color:#fff!important;transform:scale(1.08)}
+
+/* 메인 레이아웃 */
+#wrap{position:fixed;top:90px;left:0;right:0;bottom:0;display:flex}
+
+/* 사이드바 */
+#sidebar{width:var(--sw);min-width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:400;transition:transform .28s}
+
+#sw{padding:10px 12px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+#sbox{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;transition:border-color .15s}
+#sbox:focus-within{border-color:#FF5500}
+#sbox input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:'Noto Sans KR',sans-serif}
+#sbox input::placeholder{color:var(--text3)}
+.sclear{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px}
+
+#fw{padding:10px 12px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+.fl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.tbns{display:flex;gap:4px;margin-bottom:10px}
+.tbtn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
+.tbtn.on{background:#FF5500;border-color:#FF5500;color:#fff}
+.tbtn.on.gym{background:#0088CC;border-color:#0088CC}
+.prow{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text2);margin-bottom:6px}
+.prow strong{color:#FF5500;font-size:13px;font-weight:700}
+input[type=range]{width:100%;accent-color:#FF5500;cursor:pointer;margin-bottom:3px}
+.pmk{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:8px}
+.sep{height:1px;background:var(--border);margin:8px 0}
+.fr2{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.rbtns{display:flex;gap:3px}
+.rbtn{padding:4px 9px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:11px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
+.rbtn.on{background:var(--yellow);border-color:var(--yellow);color:#0B0D12;font-weight:700}
+.srt{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:11px;padding:4px 6px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;outline:none}
+
+#rhdr{padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#rcnt{font-weight:700;color:#FF5500;font-size:14px}
+.rhsub{font-size:10px;color:var(--text3)}
+
+#rlist{overflow-y:auto;flex:1;padding:8px}
+#rlist::-webkit-scrollbar{width:3px}
+#rlist::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* 카드 */
+.ptc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s;animation:fdi .2s}
+.ptc:hover{border-color:rgba(255,85,0,.4);background:var(--bg4)}
+.ptc.sel{border-color:#FF5500;background:var(--bg4);box-shadow:0 0 0 1px #FF5500}
+.ptc.evc{border-color:rgba(0,230,118,.25)}
+.pch{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px;align-items:flex-start}
+.pcn{font-size:13px;font-weight:700;line-height:1.35;flex:1}
+.pcp{font-size:12px;font-weight:700;padding:3px 8px;border-radius:5px;white-space:nowrap;flex-shrink:0;background:rgba(255,85,0,.15);color:#FF5500;border:1px solid rgba(255,85,0,.3)}
+.pcp.cheap{background:rgba(0,230,118,.12);color:#00E676;border-color:rgba(0,230,118,.3)}
+.pcm{display:flex;align-items:center;gap:4px;margin-bottom:4px;flex-wrap:wrap}
+.bdg{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+.bdg-pt{background:rgba(255,85,0,.14);color:#FF5500}
+.bdg-g{background:rgba(0,136,204,.14);color:#44AAFF}
+.bdg-ev{background:#00E676;color:#0B0D12}
+.bdg-lg{background:linear-gradient(90deg,#9B3DFF,#6A1FBE);color:#FFD700}
+.bdg-vt{background:linear-gradient(90deg,#FF6B00,#FF9500);color:#fff}
+.bdg-aw{background:linear-gradient(90deg,#CC8800,#FFD700);color:#fff}
+.pcstn{font-size:10px;color:#5599FF;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.sdot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pcadr{font-size:11px;color:var(--text2);margin-bottom:5px}
+.pctgs{display:flex;flex-wrap:wrap;gap:3px}
+.pctg{font-size:10px;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text3)}
+.evbar{font-size:10px;color:#00E676;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:5px;padding:3px 8px;margin-bottom:5px}
+.empty{text-align:center;padding:48px 16px;color:var(--text2);font-size:13px;line-height:2}
+@keyframes fdi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* 지도 컨테이너 */
+#mapwrap{flex:1;position:relative;overflow:hidden}
+#map{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%}
+
+/* 카카오맵 커스텀 핀 */
+@keyframes ringRotate{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes adGlow{0%,100%{filter:drop-shadow(0 0 5px rgba(255,215,0,.4))}50%{filter:drop-shadow(0 0 20px rgba(255,215,0,.95))}}
+@keyframes selGlow{0%,100%{filter:drop-shadow(0 0 5px rgba(0,120,255,.5))}50%{filter:drop-shadow(0 0 18px rgba(0,180,255,.95))}}
+.kpin{position:relative;cursor:pointer;display:flex;flex-direction:column;align-items:center;user-select:none;-webkit-user-select:none}
+.kpin:hover .kpbody{transform:rotate(-45deg) scale(1.12)!important}
+
+/* 팝업 */
+.kpop{background:#1C1F2A;border:1.5px solid rgba(255,85,0,.5);border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.8);font-family:'Noto Sans KR',sans-serif;width:330px;position:relative}
+.kpopi{padding:15px}
+.kpopc{position:absolute;top:8px;right:8px;background:none;border:none;color:#555D7A;font-size:22px;cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-family:sans-serif}
+.kpopc:hover{color:var(--text2);background:var(--bg3)}
+.ptop{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;padding-right:24px}
+.pnm{font-size:15px;font-weight:700;color:#F0F2FF;line-height:1.3;flex:1}
+.ppr{font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;white-space:nowrap;margin-left:8px;background:rgba(255,85,0,.2);color:#FF5500;border:1px solid rgba(255,85,0,.4)}
+.ppr.ch{background:rgba(0,230,118,.15);color:#00E676;border-color:rgba(0,230,118,.35)}
+.pbdgs{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.pstn{font-size:11px;margin-bottom:7px;display:flex;align-items:center;gap:5px;color:#8890AA}
+.psd{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.pstr{display:flex;align-items:center;gap:5px;margin-bottom:7px;font-size:12px}
+.padr{font-size:11px;color:#8890AA;margin-bottom:9px}
+.pev{font-size:11px;color:#00E676;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:6px;padding:6px 10px;margin-bottom:9px}
+.ptgs{display:flex;flex-wrap:wrap;gap:3px}
+.ptg{font-size:10px;padding:2px 7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:4px;color:#8890AA}
+
+/* 내 위치 버튼 */
+#locbtn{position:absolute;bottom:24px;right:14px;z-index:500;width:42px;height:42px;background:rgba(11,13,18,.92);backdrop-filter:blur(8px);border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.5);transition:all .15s}
+#locbtn:hover{border-color:#FF5500;color:#FF5500}
+
+/* 오버레이 */
+#sbov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:399}
+
+/* 비즈 드롭다운 */
+#bizdrop{display:none;position:absolute;top:40px;right:0;background:#1C1F2A;border:1px solid #3A3D4E;border-radius:10px;padding:6px;width:158px;box-shadow:0 8px 24px rgba(0,0,0,.8);z-index:9999}
+
+/* 모달 */
+.moval{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:800;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.mbox{background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--border);padding:26px 18px 36px;width:100%;max-width:480px}
+.mcls{width:100%;margin-top:12px;padding:13px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);font-size:13px;font-family:'Noto Sans KR',sans-serif;cursor:pointer}
+.emrow{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin:12px 0 8px}
+.emcpy{background:#FF5500;border:none;border-radius:7px;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.kid{font-size:28px;font-weight:700;color:#FFE066;text-align:center;margin:16px 0 6px;font-family:'Black Han Sans',sans-serif}
+.kcpy{width:100%;padding:13px;background:#FAE100;border:none;border-radius:10px;color:#3A1D00;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;margin-bottom:8px}
+
+#toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.4);color:#00E676;font-size:13px;font-weight:600;padding:10px 20px;border-radius:24px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
+#toast.on{opacity:1}
+
+@media(max-width:700px){
+  :root{--sw:288px}
+  #sidebar{position:fixed;top:90px;bottom:0;left:0;transform:translateX(-100%);box-shadow:6px 0 32px rgba(0,0,0,.7)}
+  #sidebar.open{transform:translateX(0)}
+  #sbov.open{display:block}
+  #btn-sb{display:flex;align-items:center;gap:4px}
+  .tagline,.nav-badge{display:none}
+  .kpop{width:calc(100vw - 28px)!important}
+}
+</style>
+</head>
+<body>
+
+<div id="loading" style="opacity: 1;"><div style="color:#FF5500;font-family:Noto Sans KR,sans-serif;text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:12px">🗺️</div><div style="font-size:16px;font-weight:700;margin-bottom:8px">지도 로딩 실패</div><div style="font-size:12px;color:#8890AA;line-height:1.8">카카오 API는 등록된 도메인에서만 작동해요<br><strong style="color:#FF5500">ptmap.vercel.app</strong> 에서 확인해주세요<br><br>또는 카카오 개발자 콘솔에서<br>도메인 등록을 확인해주세요</div></div></div>
+
+<div id="navbar">
+  <button id="btn-sb" class="nbtn" onclick="toggleSb()">☰ 목록</button>
+  <div class="logo">피티<span>맵</span></div>
+  <div class="nav-badge">BETA</div>
+  <div class="tagline">서울 가성비 PT 지도</div>
+  <div class="nav-right">
+    <button class="nbtn" onclick="shareMap()">공유</button>
+    <button class="nbtn" onclick="locateMe()">📍 내 위치</button>
+    <div style="position:relative" id="bizwrap">
+      <button class="nbtn" style="background:linear-gradient(90deg,#FF8C00,#FFD700);color:#000;font-weight:700;border:none" onclick="toggleBizDrop(event)">💼 문의하기 ▾</button>
+      <div id="bizdrop">
+        <div onclick="hideBizDrop();openModal(&#39;bizad&#39;)" style="padding:9px 12px;border-radius:7px;cursor:pointer;font-size:12px;color:#FFD700;font-weight:700;background:linear-gradient(90deg,rgba(255,165,0,.12),rgba(255,215,0,.08));border:1px solid rgba(255,215,0,.2);margin-bottom:4px">🏆 트레이너 광고</div>
+        <div onclick="hideBizDrop();openModal(&#39;bizbiz&#39;)" style="padding:9px 12px;border-radius:7px;cursor:pointer;font-size:12px;color:#00E676;font-weight:700;background:linear-gradient(90deg,rgba(0,200,100,.1),rgba(0,230,118,.06));border:1px solid rgba(0,230,118,.2)">🤝 비즈니스 협업</div>
+      </div>
+    </div>
+    <button class="nbtn pri" onclick="openModal(&#39;kakao&#39;)">✏️ 이력 수정</button>
+  </div>
+</div>
+
+<div id="chipbar">
+  <span class="chip-label">트레이너 옵션</span>
+  <div class="chip-sep"></div>
+  <button class="chip" id="c-legend" onclick="toggleChip(&#39;legend&#39;,this)">👑 LEGEND</button>
+  <button class="chip" id="c-veteran" onclick="toggleChip(&#39;veteran&#39;,this)">🔥 고인물</button>
+  <button class="chip" id="c-award" onclick="toggleChip(&#39;award&#39;,this)">🏆 IFBB Pro</button>
+  <button class="chip" id="c-cert" onclick="toggleChip(&#39;cert&#39;,this)">📜 자격증</button>
+  <button class="chip" id="c-influencer" onclick="toggleChip(&#39;influencer&#39;,this)">📱 인플루언서</button>
+  <button class="chip" id="c-women" onclick="toggleChip(&#39;women&#39;,this)">👩 여성트레이너</button>
+  <button class="chip" id="c-rehab" onclick="toggleChip(&#39;rehab&#39;,this)">🩺 물리치료사</button>
+  <button class="chip" id="c-nosmoking" onclick="toggleChip(&#39;nosmoking&#39;,this)">🚭 비흡연</button>
+  <button class="chip" id="c-notattoo" onclick="toggleChip(&#39;notattoo&#39;,this)">✋ 타투없음</button>
+  <button class="chip" id="c-manager" onclick="toggleChip(&#39;manager&#39;,this)">🎖 팀장·매니저</button>
+  <button class="chip" id="c-popular" onclick="toggleChip(&#39;popular&#39;,this)">📍 지역인기</button>
+</div>
+
+<div id="sbov" onclick="toggleSb()"></div>
+
+<div id="wrap">
+  <div id="sidebar">
+    <div id="sw">
+      <div id="sbox">
+        <span style="color:var(--text3)">🔍</span>
+        <input type="text" id="sinput" placeholder="역명·지역·센터 검색..." oninput="applyF()">
+        <button class="sclear" onclick="clearSrch()">✕</button>
+      </div>
+    </div>
+    <div id="fw">
+      <div class="fl">필터</div>
+      <div class="tbns">
+        <button class="tbtn on" id="tb-all" onclick="setType(&#39;all&#39;,this)">전체</button>
+        <button class="tbtn" id="tb-t" onclick="setType(&#39;trainer&#39;,this)">트레이너</button>
+        <button class="tbtn gym" id="tb-g" onclick="setType(&#39;gym&#39;,this)">헬스장</button>
+      </div>
+      <div class="prow"><span>1회 가격</span><span><strong id="pdis">10만원</strong> 이하</span></div>
+      <input type="range" min="20000" max="100000" step="5000" value="100000" oninput="updatePrice(this.value)">
+      <div class="pmk"><span>2만원</span><span>5만원</span><span>10만원</span></div>
+      <div class="sep"></div>
+      <div class="fr2">
+        <div class="rbtns">
+          <button class="rbtn on" id="rb-all" onclick="setRating(0,this)">전체</button>
+          <button class="rbtn" id="rb-4" onclick="setRating(4,this)">4.0+</button>
+          <button class="rbtn" id="rb-45" onclick="setRating(4.5,this)">4.5+</button>
+        </div>
+        <select class="srt" id="srtsel" onchange="applyF()">
+          <option value="rating">별점순</option>
+          <option value="price_asc">가격낮은순</option>
+          <option value="price_desc">가격높은순</option>
+          <option value="reviews">리뷰많은순</option>
+        </select>
+      </div>
+    </div>
+    <div id="rhdr">
+      <span><span id="rcnt">0</span>개 발견</span>
+      <span class="rhsub">핀 클릭시 상세보기</span>
+    </div>
+    <div id="rlist"></div>
+  </div>
+
+  <div id="mapwrap">
+    <div id="map"></div>
+    <button id="locbtn" onclick="locateMe()">📍</button>
+  </div>
+</div>
+
+<!-- 광고/비즈 모달 -->
+<div class="moval" id="modal-bizad" onclick="if(event.target===this)closeModal(&#39;bizad&#39;)">
+  <div class="mbox">
+    <div style="font-size:18px;font-weight:700;color:#FFD700;margin-bottom:4px">🏆 트레이너 광고 문의</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px">피티맵에 광고를 원하시면 아래 이메일로 연락해주세요</div>
+    <div class="emrow">
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">📧 이메일</div><div style="font-size:13px;color:#00C2FF;font-weight:600">sinyouil@naver.com</div></div>
+      <button class="emcpy" onclick="cpEmail()">📋 복사</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);line-height:1.7">제목: 피티맵 광고 문의<br>이름 / 센터명 / 연락처를 함께 보내주세요</div>
+    <button class="mcls" onclick="closeModal(&#39;bizad&#39;)">닫기</button>
+  </div>
+</div>
+<div class="moval" id="modal-bizbiz" onclick="if(event.target===this)closeModal(&#39;bizbiz&#39;)">
+  <div class="mbox">
+    <div style="font-size:18px;font-weight:700;color:#00E676;margin-bottom:4px">🤝 비즈니스 협업 문의</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px">피티맵과 협업을 원하시면 아래로 연락해주세요</div>
+    <div class="emrow">
+      <div><div style="font-size:10px;color:var(--text3);margin-bottom:2px">📧 이메일</div><div style="font-size:13px;color:#00C2FF;font-weight:600">sinyouil@naver.com</div></div>
+      <button class="emcpy" onclick="cpEmail()">📋 복사</button>
+    </div>
+    <button class="mcls" onclick="closeModal(&#39;bizbiz&#39;)">닫기</button>
+  </div>
+</div>
+
+<!-- 이력 수정 모달 -->
+<div class="moval" id="modal-kakao" onclick="if(event.target===this)closeModal(&#39;kakao&#39;)">
+  <div class="mbox" style="text-align:center">
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px">✏️ 트레이너 이력 수정 요청</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:4px">이름·경력·자격증·사진 등<br>수정하고 싶은 내용을 카카오톡으로 보내주세요</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:4px">카카오톡 ID</div>
+    <div class="kid">612형</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px">카카오톡 → 친구 추가 → ID 검색</div>
+    <button class="kcpy" onclick="cpKakao()">📋 ID 복사하기</button>
+    <button class="mcls" onclick="closeModal(&#39;kakao&#39;)">닫기</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- 카카오맵 SDK -->
+<script type="text/javascript" src="./index_files/sdk.js.다운로드"></script>
+<script>
+// ===================== 데이터 =====================
+const DATA = [
+  {id:602,n:"신림헬스 고운짐",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:79,sl:"2호선",s:"신림역",a:"관악구 신림동 (신림역 8번출구 도보 1분)",tg:["PT", "바디프로필", "다이어트"],ev:"",lat:37.482911,lng:126.927166},
+  {id:603,n:"고핏 퍼스널트레이닝 신림역점",p:70000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:93,sl:"2호선",s:"신림역",a:"관악구 신림동 (신림역 인근)",tg:["PT", "다이어트", "바디프로필", "재활"],ev:"",lat:37.485741,lng:126.929856},
+  {id:605,n:"더짐혼PT 신림역점",p:60000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:48,sl:"2호선",s:"신림역",a:"관악구 신림동 (신림역 인근)",tg:["PT", "보디빌딩", "다이어트", "바디프로필"],ev:"",lat:37.483124,lng:126.927896},
+  {id:611,n:"미래가그려짐 봉천점",p:60000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:102,sl:"2호선",s:"봉천역",a:"관악구 봉천동 봉천로 (봉천역 도보 3분)",tg:["PT", "체형교정", "재활", "바디프로필"],ev:"",lat:37.4833,lng:126.941378},
+  {id:612,n:"에스짐 관악봉천점",p:70000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:105,sl:"2호선",s:"봉천역",a:"관악구 봉천동 봉천로 (봉천역 인근)",tg:["PT", "어깨전문", "다이어트", "벌크업"],ev:"",lat:37.484124,lng:126.939441},
+  {id:623,n:"블랙멀티짐 서울대입구점",p:70000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:50,sl:"2호선",s:"서울대입구역",a:"관악구 봉천동 (서울대입구역 도보 8분)",tg:["PT", "신체기능개선", "그라스톤 근막테라피"],ev:"",lat:37.482074,lng:126.952938},
+  {id:624,n:"릿업핏PT",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:93,sl:"2호선",s:"서울대입구역",a:"관악구 봉천동 (서울대입구역 인근)",tg:["1:1 PT", "다이어트", "운동자립"],ev:"",lat:37.479444,lng:126.950602},
+  {id:636,n:"휴코어PT 낙성대점",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:22,sl:"2호선",s:"낙성대역",a:"관악구 봉천동 (낙성대역 도보 1분)",tg:["PT", "체형교정", "뇌신경학기반"],ev:"",lat:37.480319,lng:126.963178},
+  {id:639,n:"근육터짐 지방빠짐",p:60000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:7,sl:"2·4호선",s:"사당역",a:"관악구 남현동 (사당역 인근)",tg:["1:1 PT", "다이어트", "운동자립"],ev:"",lat:37.477976,lng:126.979506},
+  {id:643,n:"리턴짐",p:60000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:5.0,rv:22,sl:"4호선",s:"남성역",a:"동작구 사당동 (남성역 4번출구 도보 10초)",tg:["1:1 PT", "재활", "체형교정"],ev:"",lat:37.472903,lng:126.99927},
+  {id:649,n:"짐스타 (구:휘트니스FM)",p:60000,t:"g",b:1,ad:1,w:0,lg:1,vt:1,aw:0,r:5.0,rv:67,sl:"2호선",s:"낙성대역",a:"관악구 낙성대동 낙성대역 인근",tg:["PT", "체형교정", "다이어트", "재활"],ev:"",lat:37.478003,lng:126.963204},
+  {id:120,n:"바디스펙트럼 PT",p:80000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.9,rv:67,sl:"2호선",s:"강남역",a:"강남구 역삼동 (강남역 인근)",tg:["1:1 PT", "체형교정", "다이어트"],ev:"",lat:37.499523,lng:127.025903},
+  {id:332,n:"판교 퍼포먼스랩 PT",p:80000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.9,rv:38,sl:"신분당선",s:"판교역",a:"경기 성남시 분당구 백현동 (판교역 인근)",tg:["1:1 PT", "스포츠재활", "퍼포먼스"],ev:"",lat:37.392846,lng:127.110008},
+  {id:405,n:"강남 핏앤바디 PT",p:90000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.9,rv:54,sl:"2호선",s:"역삼역",a:"강남구 역삼동 테헤란로 인근",tg:["1:1 PT", "바디프로필", "다이어트"],ev:"",lat:37.499124,lng:127.035296},
+  {id:482,n:"압구정 엘리트핏 PT",p:100000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.9,rv:36,sl:"3호선",s:"압구정역",a:"강남구 압구정동 (압구정역 2번출구)",tg:["1:1 PT", "바디프로필", "체형교정"],ev:"",lat:37.527188,lng:127.02878},
+  {id:632,n:"낙성대PT 바디에프오",p:60000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.9,rv:87,sl:"2호선",s:"낙성대역",a:"관악구 봉천동 낙성대 (낙성대역 도보 2분)",tg:["EMS트레이닝", "1:1 PT", "바디프로필"],ev:"",lat:37.476946,lng:126.962208},
+  {id:108,n:"성수 핏바디 스튜디오",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:38,sl:"2호선",s:"성수역",a:"성동구 성수동1가 (성수역 4번출구)",tg:["바디프로필", "1:1 PT", "다이어트"],ev:"",lat:37.543918,lng:127.056823},
+  {id:116,n:"선릉 체형연구소",p:70000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:41,sl:"2호선",s:"선릉역",a:"강남구 역삼동 (선릉역 10번출구)",tg:["체형교정", "재활", "1:1 PT"],ev:"",lat:37.503391,lng:127.048047},
+  {id:312,n:"일산 퍼스트PT",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:41,sl:"3호선",s:"백석역",a:"경기 고양시 일산동구 (백석역 인근)",tg:["1:1 PT", "바디프로필", "다이어트"],ev:"",lat:37.661124,lng:126.774841},
+  {id:481,n:"반포 바디앤마인드",p:90000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:43,sl:"3·7·9호선",s:"고속터미널역",a:"서초구 반포동 (고속터미널역 근처)",tg:["필라테스", "PT", "재활"],ev:"",lat:37.50324,lng:127.006426},
+  {id:604,n:"유얼스짐",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:41,sl:"2호선",s:"신림역",a:"관악구 신림동 유얼스짐 (신림역 인근)",tg:["1:1 PT", "근력강화", "체형교정"],ev:"",lat:37.485101,lng:126.930839},
+  {id:621,n:"웨이브짐 서울대입구점",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:34,sl:"2호선",s:"서울대입구역",a:"관악구 관악로 200 양지하이슈타트 지하B1 (서울대입구역 도보 2분)",tg:["PT", "웨이트", "체형교정"],ev:"",lat:37.479538,lng:126.951769},
+  {id:633,n:"레시핏 낙성대점",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:42,sl:"2호선",s:"낙성대역",a:"관악구 봉천동 (낙성대역 인근)",tg:["재활", "체형교정", "PT", "바디프로필"],ev:"",lat:37.479566,lng:126.965102},
+  {id:634,n:"오늘부터운동",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.8,rv:25,sl:"2호선",s:"낙성대역",a:"관악구 남부순환로 1934 지하1층 (낙성대역 2번출구 앞 버거킹건물)",tg:["1:1 PT", "체형교정", "다이어트"],ev:"",lat:37.4793,lng:126.963928},
+  {id:106,n:"왕십리 바디랩 PT",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.7,rv:43,sl:"2호선",s:"왕십리역",a:"성동구 하왕십리동 (왕십리역 2번출구)",tg:["1:1 PT", "다이어트", "근력"],ev:"",lat:37.563099,lng:127.035771},
+  {id:118,n:"역삼 바디코치",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.7,rv:62,sl:"2호선",s:"역삼역",a:"강남구 역삼동 (역삼역 1번출구)",tg:["다이어트", "근력강화", "영양상담"],ev:"",lat:37.499745,lng:127.03787},
+  {id:138,n:"합정 바디컴포저",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.7,rv:44,sl:"2호선",s:"합정역",a:"마포구 합정동 (합정역 5번출구)",tg:["1:1 PT", "체형교정", "다이어트"],ev:"",lat:37.548837,lng:126.913208},
+  {id:322,n:"수원 바디메이커 PT",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.7,rv:63,sl:"수인분당선",s:"영통역",a:"경기 수원시 영통구 영통동 (영통역 근처)",tg:["1:1 PT", "체형교정", "재활"],ev:"",lat:37.254591,lng:127.055211},
+  {id:362,n:"용인 체형교정 연구소",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.7,rv:44,sl:"수인분당선",s:"죽전역",a:"경기 용인시 수지구 죽전동 (죽전역 근처)",tg:["체형교정", "재활", "1:1 PT"],ev:"",lat:37.334005,lng:127.108912},
+  {id:421,n:"이태원 바디아트 PT",p:80000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.7,rv:67,sl:"6호선",s:"이태원역",a:"용산구 이태원동 이태원로 (이태원역 2번출구)",tg:["1:1 PT", "영어PT", "바디프로필"],ev:"",lat:37.532738,lng:126.992869},
+  {id:114,n:"삼성동 필라테스PT",p:70000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:57,sl:"2호선",s:"삼성역",a:"강남구 삼성동 (삼성역 6번출구)",tg:["필라테스", "PT", "체형교정"],ev:"",lat:37.510071,lng:127.063472},
+  {id:122,n:"교대 슬림UP",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:51,sl:"2호선",s:"교대역",a:"서초구 반포동 (교대역 7번출구)",tg:["다이어트", "체형관리", "HIIT"],ev:"",lat:37.493391,lng:127.015811},
+  {id:140,n:"홍대 핏스튜디오",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:67,sl:"2호선",s:"홍대입구역",a:"마포구 서교동 (홍대입구역 3번출구)",tg:["다이어트", "1:1 PT", "필라테스"],ev:"",lat:37.555997,lng:126.92438},
+  {id:304,n:"부천 바디핏 PT",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:52,sl:"7호선",s:"부천시청역",a:"경기 부천시 중동 (부천시청역 근처)",tg:["1:1 PT", "다이어트", "근력강화"],ev:"",lat:37.496201,lng:126.783739},
+  {id:342,n:"평촌 바디핏 트레이너",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:57,sl:"4호선",s:"범계역",a:"경기 안양시 동안구 평촌동 (범계역 근처)",tg:["1:1 PT", "다이어트", "체형교정"],ev:"",lat:37.392078,lng:126.94799},
+  {id:434,n:"석촌 바디스튜디오",p:70000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:48,sl:"8호선",s:"석촌역",a:"송파구 석촌동 (석촌역 4번출구)",tg:["1:1 PT", "다이어트", "체형교정"],ev:"",lat:37.5049,lng:127.100628},
+  {id:472,n:"왕십리 핏바디 PT",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:52,sl:"2호선",s:"왕십리역",a:"성동구 행당동 (왕십리역 4번출구)",tg:["1:1 PT", "체형교정", "다이어트"],ev:"",lat:37.562815,lng:127.035215},
+  {id:483,n:"청담 스튜디오 엑스",p:100000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:89,sl:"7호선",s:"청담역",a:"강남구 청담동 청담대로 인근",tg:["PT", "필라테스", "요가"],ev:"",lat:37.52111,lng:127.050873},
+  {id:635,n:"바운드짐 낙성대역점",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.6,rv:38,sl:"2호선",s:"낙성대역",a:"관악구 봉천동 (낙성대역 인근)",tg:["웨이트", "PT", "GX"],ev:"",lat:37.477035,lng:126.961336},
+  {id:1072,n:"뚝섬 바디코어",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:37,sl:"2호선",s:"뚝섬역",a:"광진구 자양동 (뚝섬역 3번출구)",tg:["1:1 PT", "재활", "체형교정"],ev:"",lat:37.549015,lng:127.045615},
+  {id:202,n:"공덕 PT스튜디오",p:60000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:52,sl:"5호선",s:"공덕역",a:"마포구 공덕동 (공덕역 4번출구)",tg:["1:1 PT", "체형교정", "근력강화"],ev:"",lat:37.541911,lng:126.949666},
+  {id:204,n:"여의도 IFC 스포츠클럽",p:80000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:143,sl:"9호선",s:"여의도역",a:"영등포구 여의도동 IFC몰 지하",tg:["웨이트", "PT", "수영", "GX"],ev:"",lat:37.522101,lng:126.926139},
+  {id:401,n:"애니타임피트니스 강남점",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:287,sl:"2호선",s:"강남역",a:"강남구 역삼동 강남대로 (강남역 도보 2분)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.499242,lng:127.027342},
+  {id:471,n:"애니타임피트니스 성수점",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:167,sl:"2호선",s:"성수역",a:"성동구 성수동1가 (성수역 2번출구)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.544587,lng:127.056297},
+  {id:473,n:"뚝섬 크로스핏 서울",p:80000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:78,sl:"2호선",s:"뚝섬역",a:"성동구 성수동2가 (뚝섬역 2번출구)",tg:["크로스핏", "웨이트", "올림픽 리프팅"],ev:"",lat:37.545828,lng:127.047614},
+  {id:494,n:"가양 바디핏 PT",p:50000,t:"t",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:47,sl:"9호선",s:"가양역",a:"강서구 가양동 (가양역 2번출구)",tg:["1:1 PT", "다이어트", "근력"],ev:"",lat:37.560971,lng:126.852775},
+  {id:601,n:"자마이카 피트니스 신림역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:312,sl:"2호선",s:"신림역",a:"관악구 신림동 남부순환로 (신림역 1번출구)",tg:["웨이트", "GX", "PT", "필라테스"],ev:"",lat:37.486042,lng:126.928842},
+  {id:614,n:"웨슬리짐",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:78,sl:"2호선",s:"봉천역",a:"관악구 봉천동 (봉천역 인근)",tg:["1:1 PT", "그룹PT", "체형교정"],ev:"",lat:37.484271,lng:126.939872},
+  {id:617,n:"자마이카 휘트니스 서울대입구점",p:30000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:298,sl:"2호선",s:"서울대입구역",a:"관악구 봉천동 관악로 200 (서울대입구역 3번출구)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.482974,lng:126.950979},
+  {id:641,n:"스포애니 사당역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:234,sl:"2·4호선",s:"사당역",a:"관악구 남현동 (사당역 도보 3분)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.476294,lng:126.983067},
+  {id:646,n:"라이크PT스튜디오 장승배기점",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.5,rv:78,sl:"7호선",s:"장승배기역",a:"동작구 상도동 장승배기역 60평 9층 통창뷰 (장승배기역 인근)",tg:["1:1 PT", "프리미엄", "체형교정"],ev:"",lat:37.494872,lng:126.940814},
+  {id:107,n:"스포애니 성수점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:203,sl:"2호선",s:"성수역",a:"성동구 성수동2가 (성수역 3번출구)",tg:["웨이트", "크로스핏", "PT"],ev:"",lat:37.544012,lng:127.057372},
+  {id:119,n:"스포애니 강남역점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:312,sl:"2호선",s:"강남역",a:"서초구 서초동 1305 (강남역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"신규 PT 등록 첫달 50% 할인 (4월 한정)",lat:37.497399,lng:127.028868},
+  {id:136,n:"디큐브 피트니스",p:60000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:189,sl:"2호선",s:"신도림역",a:"구로구 신도림동 디큐브시티 내",tg:["웨이트", "PT", "GX", "수영"],ev:"",lat:37.510119,lng:126.891078},
+  {id:201,n:"스포애니 공덕역점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:284,sl:"5호선",s:"공덕역",a:"마포구 공덕동 105 (공덕역 1번출구)",tg:["웨이트", "GX", "PT", "필라테스"],ev:"",lat:37.545042,lng:126.951342},
+  {id:313,n:"고양 아람누리 스포츠센터",p:20000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:312,sl:"3호선",s:"대화역",a:"경기 고양시 일산서구 대화동 아람누리 내",tg:["웨이트", "수영", "PT", "클라이밍"],ev:"",lat:37.664703,lng:126.751812},
+  {id:331,n:"스포애니 판교점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:213,sl:"신분당선·수인분당선",s:"판교역",a:"경기 성남시 분당구 백현동 (판교역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.396071,lng:127.109579},
+  {id:402,n:"헬스보이짐 강남역점",p:60000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:198,sl:"2호선",s:"강남역",a:"강남구 역삼동 (강남역 7번출구 도보 1분)",tg:["웨이트", "PT", "유산소", "필라테스"],ev:"",lat:37.496111,lng:127.025666},
+  {id:413,n:"홍대 짐박스",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:189,sl:"2호선",s:"홍대입구역",a:"마포구 서교동 (홍대입구역 6번출구 인근)",tg:["크로스핏", "웨이트", "PT"],ev:"",lat:37.555603,lng:126.921512},
+  {id:432,n:"애니타임피트니스 잠실점",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:176,sl:"2호선",s:"잠실역",a:"송파구 신천동 잠실로 (잠실역 3번출구)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.511546,lng:127.098708},
+  {id:484,n:"논현 파워하우스짐",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:112,sl:"7호선",s:"학동역",a:"강남구 논현동 (학동역 인근)",tg:["보디빌딩", "웨이트", "PT"],ev:"",lat:37.5195,lng:127.042116},
+  {id:532,n:"광화문 핏클럽",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:89,sl:"5호선",s:"광화문역",a:"종로구 새문안로 (광화문역 3번출구)",tg:["웨이트", "PT", "스트레칭"],ev:"",lat:37.571746,lng:126.975608},
+  {id:616,n:"짐프라이빗",p:60000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:67,sl:"2호선",s:"서울대입구역",a:"관악구 봉천동 (서울대입구역 방향)",tg:["1:1 PT", "프리미엄", "체형교정"],ev:"",lat:37.479791,lng:126.951647},
+  {id:631,n:"스포애니 낙성대점PRO",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:198,sl:"2호선",s:"낙성대역",a:"관악구 인헌6길 15 (낙성대역 도보 6분)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.480171,lng:126.961779},
+  {id:644,n:"데일리짐 남성역점",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.4,rv:156,sl:"4호선",s:"남성역",a:"동작구 사당동 사당로 196 4층 (남성역 인근)",tg:["웨이트", "GX", "PT", "근막이완"],ev:"",lat:37.475816,lng:127.002253},
+  {id:105,n:"스포애니 왕십리점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:187,sl:"2호선",s:"왕십리역",a:"성동구 하왕십리동 (왕십리역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.559824,lng:127.035996},
+  {id:109,n:"스포애니 건대점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:221,sl:"2호선",s:"건대입구역",a:"광진구 화양동 (건대입구역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.54203,lng:127.067664},
+  {id:113,n:"스포애니 삼성점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:198,sl:"2호선",s:"삼성역",a:"강남구 삼성동 (삼성역 5번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.507003,lng:127.061012},
+  {id:115,n:"스포애니 선릉점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:215,sl:"2,3호선",s:"선릉역",a:"강남구 역삼동 (선릉역 8번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.504903,lng:127.050867},
+  {id:124,n:"방배 웰니스핏",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:112,sl:"2호선",s:"방배역",a:"서초구 방배동 카페거리 인근",tg:["웨이트", "GX", "PT", "필라테스"],ev:"",lat:37.479844,lng:126.995502},
+  {id:125,n:"스포애니 이수역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:208,sl:"2,4호선",s:"이수역",a:"서초구 방배동 2532-2 (이수역 5번출구)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.486366,lng:126.981877},
+  {id:137,n:"합정 어반짐",p:50000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:156,sl:"2,6호선",s:"합정역",a:"마포구 합정동 (합정역 7번출구)",tg:["웨이트", "크로스핏", "PT"],ev:"",lat:37.549308,lng:126.915595},
+  {id:139,n:"스포애니 홍대입구점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:195,sl:"2호선",s:"홍대입구역",a:"마포구 동교동 (홍대입구역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.559176,lng:126.921606},
+  {id:321,n:"스포애니 수원역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:234,sl:"1호선·수인분당선",s:"수원역",a:"경기 수원시 팔달구 (수원역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.264738,lng:127.001969},
+  {id:333,n:"분당 스포애니 서현점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:198,sl:"수인분당선",s:"서현역",a:"경기 성남시 분당구 서현동 (서현역 1번출구)",tg:["웨이트", "GX", "PT", "필라테스"],ev:"",lat:37.384166,lng:127.124902},
+  {id:403,n:"짐엑스 강남",p:60000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:156,sl:"2호선",s:"강남역",a:"서초구 서초동 강남대로 인근",tg:["웨이트", "크로스핏", "PT"],ev:"",lat:37.498941,lng:127.028356},
+  {id:412,n:"애니타임피트니스 신촌점",p:60000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:143,sl:"2호선",s:"신촌역",a:"서대문구 신촌동 신촌로 (신촌역 1번출구)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.556524,lng:126.936741},
+  {id:431,n:"스포애니 잠실역점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:198,sl:"2호선",s:"잠실역",a:"송파구 잠실동 올림픽로 (잠실역 1번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.514771,lng:127.098279},
+  {id:441,n:"애니타임피트니스 건대점",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:156,sl:"2호선",s:"건대입구역",a:"광진구 화양동 (건대입구역 1번출구)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.540394,lng:127.071167},
+  {id:493,n:"마곡 애니타임피트니스",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:134,sl:"9호선·공항철도",s:"마곡나루역",a:"강서구 마곡동 (마곡나루역 근처)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.569283,lng:126.831246},
+  {id:501,n:"애니타임피트니스 가산점",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:198,sl:"1·7호선",s:"가산디지털단지역",a:"금천구 가산동 디지털단지 (가산디지털단지역)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.481542,lng:126.882642},
+  {id:531,n:"종로 애니타임피트니스",p:70000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:143,sl:"1호선",s:"종각역",a:"종로구 관철동 (종각역 3번출구)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.571571,lng:126.980279},
+  {id:607,n:"휘트니스피플 우먼 신림점",p:40000,t:"g",b:0,ad:0,w:1,lg:0,vt:0,aw:0,r:4.3,rv:65,sl:"2호선",s:"신림역",a:"관악구 신림동 (조원로 인근)",tg:["여성전용", "PT", "다이어트", "요가"],ev:"",lat:37.484012,lng:126.930672},
+  {id:613,n:"스포애니 은천점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:156,sl:"2호선",s:"봉천역",a:"관악구 봉천동 927-21 주원빌딩 7~8층",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.481203,lng:126.937412},
+  {id:642,n:"스포애니 이수역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:208,sl:"2·4호선",s:"이수역",a:"서초구 방배동 2532-2 (이수역 5번출구)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.486178,lng:126.98039},
+  {id:645,n:"무브짐 남성역사당점",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:87,sl:"4호선",s:"남성역",a:"동작구 사당동 (남성역 인근) 올리모델링 2023년 오픈",tg:["웨이트", "PT", "GX"],ev:"",lat:37.475009,lng:127.001504},
+  {id:648,n:"운동하는날 숭실대점",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.3,rv:98,sl:"7호선",s:"숭실대입구역",a:"동작구 상도동 숭실대학교 인근",tg:["웨이트", "PT", "체형교정"],ev:"",lat:37.495426,lng:126.939793},
+  {id:101,n:"스포애니 시청점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:134,sl:"2호선",s:"시청역",a:"중구 태평로 (시청역 1번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.566942,lng:126.976942},
+  {id:104,n:"한양대 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:121,sl:"2호선",s:"한양대역",a:"성동구 행당동 (한양대역 1번출구)",tg:["웨이트", "GX", "PT"],ev:"신규 등록시 PT 3회 무료",lat:37.555301,lng:127.042439},
+  {id:112,n:"스포애니 잠실새내점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:176,sl:"2호선",s:"잠실새내역",a:"송파구 신천동 (잠실새내역 3번출구)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.512324,lng:127.079641},
+  {id:117,n:"스포애니 역삼점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:234,sl:"2호선",s:"역삼역",a:"강남구 역삼동 (역삼역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.502474,lng:127.034879},
+  {id:121,n:"교대역 파워핏",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:143,sl:"2,3호선",s:"교대역",a:"서초구 서초동 (교대역 14번출구)",tg:["웨이트", "PT", "GX"],ev:"",lat:37.491138,lng:127.013069},
+  {id:133,n:"스포애니 구로디지털단지점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:245,sl:"2호선",s:"구로디지털단지역",a:"구로구 구로동 (구디역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.486066,lng:126.903502},
+  {id:135,n:"스포애니 신도림점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:267,sl:"1,2호선",s:"신도림역",a:"구로구 신도림동 (신도림역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.506835,lng:126.889236},
+  {id:141,n:"스포애니 신촌점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:167,sl:"2호선",s:"신촌역",a:"서대문구 창천동 (신촌역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.555494,lng:126.938367},
+  {id:301,n:"스포애니 부평역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:198,sl:"1호선·인천1호선",s:"부평역",a:"인천 부평구 부평동 (부평역 1번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.491242,lng:126.723342},
+  {id:311,n:"스포애니 일산점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:187,sl:"3호선",s:"마두역",a:"경기 고양시 일산동구 마두동 (마두역 2번출구)",tg:["웨이트", "GX", "PT", "요가"],ev:"",lat:37.6572,lng:126.779878},
+  {id:341,n:"스포애니 안양역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:178,sl:"1호선",s:"안양역",a:"경기 안양시 만안구 (안양역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.396594,lng:126.925467},
+  {id:361,n:"스포애니 기흥역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:167,sl:"수인분당선·경강선",s:"기흥역",a:"경기 용인시 기흥구 (기흥역 4번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.27658,lng:127.113101},
+  {id:371,n:"스포애니 김포공항점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:143,sl:"5·9호선·공항철도",s:"김포공항역",a:"서울 강서구 공항동 (김포공항역 인근)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.562287,lng:126.801697},
+  {id:404,n:"스포애니 서초점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:134,sl:"3호선",s:"서초역",a:"서초구 서초동 서초대로 (서초역 1번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.491401,lng:127.009039},
+  {id:411,n:"스포애니 마포점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:167,sl:"5호선",s:"마포역",a:"마포구 마포대로 (마포역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.515,lng:126.951778},
+  {id:415,n:"서대문 애니타임피트니스",p:60000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:112,sl:"3호선",s:"홍제역",a:"서대문구 홍은동 (홍제역 인근)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.592203,lng:126.947067},
+  {id:422,n:"스포애니 용산점",p:50000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:134,sl:"1호선·경의선",s:"용산역",a:"용산구 한강로3가 (용산역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.529591,lng:126.967111},
+  {id:453,n:"도봉 애니타임피트니스",p:60000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:98,sl:"4호선",s:"쌍문역",a:"도봉구 쌍문동 (쌍문역 2번출구)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.649849,lng:127.02993},
+  {id:454,n:"길음 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:123,sl:"4호선",s:"길음역",a:"성북구 길음동 (길음역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.60131,lng:127.022362},
+  {id:462,n:"스포애니 상계점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:156,sl:"4호선",s:"상계역",a:"노원구 상계동 (상계역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.664805,lng:127.077112},
+  {id:491,n:"목동 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:178,sl:"5호선",s:"오목교역",a:"양천구 목동 목동로 (오목교역 근처)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.529769,lng:126.873253},
+  {id:511,n:"노량진 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:167,sl:"1·9호선",s:"노량진역",a:"동작구 노량진동 (노량진역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.5139,lng:126.944678},
+  {id:606,n:"MF토탈휘트니스 신림점",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:87,sl:"2호선",s:"신림역",a:"관악구 신림동 (신림역 서쪽)",tg:["웨이트", "GX", "사우나", "PT"],ev:"",lat:37.486399,lng:126.927671},
+  {id:615,n:"운동친구 헬스장",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:89,sl:"2호선",s:"봉천역",a:"관악구 봉천동 성현로 (봉천역~서울대입구역 사이)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.483103,lng:126.941267},
+  {id:622,n:"휘트니스FM 서울대점",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:123,sl:"2호선",s:"서울대입구역",a:"관악구 봉천동 (서울대입구역 도보 5분)",tg:["웨이트", "PT", "요가", "필라테스"],ev:"",lat:37.481791,lng:126.954511},
+  {id:637,n:"인헌동 스포애니 낙성대",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.2,rv:112,sl:"2호선",s:"낙성대역",a:"관악구 인헌동 (낙성대역~남현동 사이)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.478208,lng:126.965295},
+  {id:102,n:"더스포 시청점",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:89,sl:"2호선",s:"시청역",a:"중구 무교동 (시청역 5번출구)",tg:["PT", "웨이트", "유산소"],ev:"",lat:37.563811,lng:126.975266},
+  {id:1071,n:"뚝섬 어반핏",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:98,sl:"2호선",s:"뚝섬역",a:"광진구 자양동 (뚝섬역 1번출구)",tg:["웨이트", "PT", "크로스핏"],ev:"",lat:37.547487,lng:127.048097},
+  {id:110,n:"건대 파워짐",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:145,sl:"2호선",s:"건대입구역",a:"광진구 자양동 (건대입구역 5번출구)",tg:["보디빌딩", "웨이트", "PT"],ev:"",lat:37.538777,lng:127.06895},
+  {id:123,n:"방배 골드짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:98,sl:"2호선",s:"방배역",a:"서초구 방배동 (방배역 2번출구)",tg:["웨이트", "보디빌딩", "PT"],ev:"",lat:37.482474,lng:126.997838},
+  {id:134,n:"G밸리 핏니스",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:178,sl:"2호선",s:"구로디지털단지역",a:"구로구 구로동 (구디역 4번출구)",tg:["웨이트", "PT", "스트레칭"],ev:"",lat:37.4858,lng:126.902328},
+  {id:142,n:"신촌 유플렉스짐",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:134,sl:"2호선",s:"신촌역",a:"서대문구 창천동 유플렉스 건물",tg:["웨이트", "PT", "요가"],ev:"",lat:37.556678,lng:126.93539},
+  {id:205,n:"스포애니 노원역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:189,sl:"4,7호선",s:"노원역",a:"노원구 상계동 (노원역 5번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.654824,lng:127.075096},
+  {id:303,n:"스포애니 부천소사점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:145,sl:"1호선",s:"소사역",a:"경기 부천시 소사구 (소사역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.484241,lng:126.792956},
+  {id:305,n:"인천 스포애니 주안점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:167,sl:"1호선·인천1호선",s:"주안역",a:"인천 미추홀구 주안동 (주안역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.459524,lng:126.703596},
+  {id:324,n:"스포애니 수원인계점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:176,sl:"수인분당선",s:"수원시청역",a:"경기 수원시 팔달구 인계동",tg:["웨이트", "GX", "PT"],ev:"",lat:37.285844,lng:127.016302},
+  {id:351,n:"스포애니 의정부역점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:156,sl:"1호선",s:"의정부역",a:"경기 의정부시 의정부동 (의정부역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.737029,lng:127.044303},
+  {id:414,n:"은평 스포애니 연신내점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:145,sl:"3·6호선",s:"연신내역",a:"은평구 불광동 연서로 (연신내역 4번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.620271,lng:126.921172},
+  {id:435,n:"스포애니 천호점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:167,sl:"5호선",s:"천호역",a:"강동구 천호동 (천호역 1번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.537135,lng:127.121436},
+  {id:442,n:"군자 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:123,sl:"5·7호선",s:"군자역",a:"광진구 중곡동 (군자역 4번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.560478,lng:127.07709},
+  {id:451,n:"스포애니 미아점",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:145,sl:"4호선",s:"미아사거리역",a:"강북구 미아동 (미아사거리역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.611529,lng:127.029903},
+  {id:492,n:"화곡 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:156,sl:"5호선",s:"화곡역",a:"강서구 화곡동 (화곡역 3번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.545985,lng:126.850756},
+  {id:521,n:"불광 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:134,sl:"3호선",s:"불광역",a:"은평구 불광동 (불광역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.608238,lng:126.927769},
+  {id:609,n:"난향짐 PT센터",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:78,sl:"2호선",s:"신림역",a:"관악구 난향동 남부순환로 (신림역 남쪽)",tg:["웨이트", "PT", "다이어트"],ev:"",lat:37.48643,lng:126.927264},
+  {id:610,n:"서원동 바디핏",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:56,sl:"2호선",s:"신림역",a:"관악구 서원동 신림로 (신림역~봉천역 사이)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.483177,lng:126.92855},
+  {id:626,n:"행운동 바디업짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.1,rv:88,sl:"2호선",s:"낙성대역",a:"관악구 행운동 (낙성대역 방향)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.478503,lng:126.965253},
+  {id:103,n:"한양대 파워짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:156,sl:"2호선",s:"한양대역",a:"성동구 행당동 (한양대역 2번출구)",tg:["웨이트", "PT", "보디빌딩"],ev:"",lat:37.555941,lng:127.041456},
+  {id:352,n:"의정부 파워짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:134,sl:"1호선",s:"의정부역",a:"경기 의정부시 의정부동 (의정부역 근처)",tg:["보디빌딩", "웨이트", "PT"],ev:"",lat:37.738992,lng:127.045513},
+  {id:423,n:"중구 을지피트니스",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:98,sl:"2호선",s:"을지로3가역",a:"중구 을지로2가 (을지로2가역 인근)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.567274,lng:126.991638},
+  {id:433,n:"강동 파워짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:134,sl:"5·8호선",s:"천호역",a:"강동구 천호동 (천호역 근처)",tg:["보디빌딩", "웨이트", "PT"],ev:"",lat:37.539666,lng:127.125202},
+  {id:443,n:"동대문 헬스플러스",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:112,sl:"2호선",s:"신설동역",a:"동대문구 용두동 (신설동역 근처)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.572503,lng:127.02237},
+  {id:452,n:"수유 바디팩토리",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:134,sl:"4호선",s:"수유역",a:"강북구 수유동 (수유역 3번출구)",tg:["웨이트", "PT", "보디빌딩"],ev:"",lat:37.645292,lng:127.027713},
+  {id:461,n:"태릉 파워짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:145,sl:"6·7호선",s:"태릉입구역",a:"노원구 공릉동 (태릉입구역 인근)",tg:["보디빌딩", "웨이트", "PT"],ev:"",lat:37.62608,lng:127.084801},
+  {id:502,n:"독산 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:123,sl:"1호선",s:"독산역",a:"금천구 독산동 (독산역 2번출구)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.466211,lng:126.894766},
+  {id:522,n:"응암 파워핏",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:112,sl:"6호선",s:"응암역",a:"은평구 응암동 (응암역 근처)",tg:["웨이트", "PT", "보디빌딩"],ev:"",lat:37.600091,lng:126.911911},
+  {id:541,n:"면목 스포애니",p:40000,t:"g",b:1,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:112,sl:"7호선",s:"사가정역",a:"중랑구 면목동 (사가정역 인근)",tg:["웨이트", "GX", "PT"],ev:"",lat:37.577494,lng:127.085367},
+  {id:542,n:"당고개 파워센터",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:98,sl:"4호선",s:"당고개역",a:"노원구 상계동 (당고개역 근처)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.685978,lng:127.09159},
+  {id:608,n:"조원 파워짐",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:134,sl:"2호선",s:"신림역",a:"관악구 조원동 조원중앙로 (신림역~독산역 사이)",tg:["웨이트", "보디빌딩", "PT"],ev:"",lat:37.483918,lng:126.930123},
+  {id:625,n:"대학동 파워핏",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:76,sl:"2호선",s:"서울대입구역",a:"관악구 대학동 관악로 (서울대입구역~낙성대역 사이)",tg:["웨이트", "PT", "보디빌딩"],ev:"",lat:37.482666,lng:126.952777},
+  {id:638,n:"남현동 피트니스플러스",p:40000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:94,sl:"2호선",s:"사당역",a:"관악구 남현동 (낙성대역~사당역 사이)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.475237,lng:126.981008},
+  {id:647,n:"명문헬스 상도점",p:30000,t:"g",b:0,ad:0,w:0,lg:0,vt:0,aw:0,r:4.0,rv:134,sl:"7호선",s:"숭실대입구역",a:"동작구 상도동 (숭실대입구역 인근)",tg:["웨이트", "PT", "유산소"],ev:"",lat:37.497927,lng:126.937382}
+];
+// ===================== 유틸 =====================
+const LC = {"1호선":"#0052A4","2호선":"#00A84D","3호선":"#EF7C1C","4호선":"#00A5DE","5호선":"#996CAC","6호선":"#CD7C2F","7호선":"#747F00","8호선":"#E51C23","9호선":"#BFA100","신분당선":"#D4003B","수인분당선":"#FFCD00","경강선":"#1DB58B","공항철도":"#2781C0"};
+function lc(sl){for(const k in LC){if(sl&&sl.includes(k.replace("호선","")))return LC[k];}return "#44AAFF";}
+
+// ===================== 상태 =====================
+const F={type:'all',maxP:100000,minR:0,chips:new Set(),q:''};
+let selId=null, popOv=null, myMap=null, ovsMap={};
+
+// ===================== 핀 HTML =====================
+function makePinHTML(pt){
+  const ad=pt.ad, big=pt.b, women=pt.w;
+  const W = big?(ad?46:42):(ad?42:38);
+  const R = W/2;
+  let bg,brd,lbl,lbg,lco;
+  if(women){bg='linear-gradient(140deg,#FF6FA8,#CC3377)';brd='#FFB3D1';lbl='WOMEN';lbg='#CC3377';lco='#fff';}
+  else if(big){bg='linear-gradient(140deg,#0055CC,#002B80)';brd='#88CCFF';lbl='대형GYM';lbg='linear-gradient(90deg,#0055CC,#002B80)';lco='#88CCFF';}
+  else if(pt.t==='t'){bg='linear-gradient(140deg,#CC4400,#FF5500)';brd='#FF9966';lbl='PT';lbg='rgba(11,13,18,.9)';lco='#FF9966';}
+  else{bg='linear-gradient(140deg,#0077CC,#00AAFF)';brd='#fff';lbl='GYM';lbg='rgba(11,13,18,.9)';lco='#44AAFF';}
+  
+  const icon = women
+    ? `<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="5" r="3" stroke="white" stroke-width="2"/><path d="M4 16c0-3 2.5-5 5-5s5 2 5 5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`
+    : big
+    ? `<svg width="22" height="18" viewBox="0 0 22 18" fill="none"><rect x="1" y="4" width="4" height="9" rx="2" fill="white" opacity=".9"/><rect x="17" y="4" width="4" height="9" rx="2" fill="white" opacity=".9"/><rect x="5" y="2" width="4" height="13" rx="2" fill="white" opacity=".9"/><rect x="13" y="2" width="4" height="13" rx="2" fill="white" opacity=".9"/><rect x="9" y="5" width="4" height="5" rx="2" fill="white" opacity=".9"/>${pt.lg?'<polygon points="11,17 12.4,13.5 15.5,13.5 13.2,11.5 14.1,8 11,10 7.9,8 8.8,11.5 6.5,13.5 9.6,13.5" fill="#FFD700"/>':''}</svg>`
+    : `<svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect x="1" y="5" width="3" height="4" rx="1" fill="white"/><rect x="14" y="5" width="3" height="4" rx="1" fill="white"/><rect x="4" y="3" width="3" height="8" rx="1.5" fill="white"/><rect x="11" y="3" width="3" height="8" rx="1.5" fill="white"/><rect x="7" y="6" width="4" height="2" rx="1" fill="white"/></svg>`;
+
+  const rings = ad ? `
+    <div style="position:absolute;top:50%;left:50%;width:${W+12}px;height:${W+12}px;border-radius:50%;border:2px dashed gold;border-top-color:transparent;pointer-events:none;animation:ringRotate 2.5s linear infinite;transform:translate(-50%,-50%)"></div>
+    <div style="position:absolute;top:50%;left:50%;width:${W+20}px;height:${W+20}px;border-radius:50%;border:1.5px dashed rgba(255,215,0,.4);pointer-events:none;animation:ringRotate 4s linear infinite reverse;transform:translate(-50%,-50%)"></div>` : '';
+
+  return `<div class="kpin" data-id="${pt.id}" onclick="handlePinClick(${pt.id})"
+    style="position:relative;width:${W+22}px;height:${W+24}px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:0">
+    ${rings}
+    <div style="position:absolute;top:2px;right:2px;min-width:16px;height:16px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center;padding:0 3px;box-shadow:0 1px 4px rgba(0,0,0,.25);z-index:5">
+      <span style="color:#0055CC;font-size:8px;font-weight:900;line-height:1">1</span>
+    </div>
+    <div class="kpbody" id="pb-${pt.id}" style="width:${W}px;height:${W}px;background:${bg};border-radius:${R}px ${R}px ${R}px 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:3px solid ${brd};box-shadow:0 3px 10px rgba(0,0,0,.4);transition:all .2s;flex-shrink:0;${ad?'animation:adGlow 2s infinite':''}">
+      <div style="transform:rotate(45deg)">${icon}</div>
+    </div>
+    <div style="font-size:8px;font-weight:900;padding:2px 5px;border-radius:4px;white-space:nowrap;font-family:Noto Sans KR,sans-serif;margin-top:3px;background:${lbg};color:${lco};border:1px solid ${brd}">${lbl}</div>
+  </div>`;
+}
+
+// ===================== 팝업 HTML =====================
+function makePopHTML(pt){
+  const pr=`${(pt.p/10000).toFixed(0)}만원~`;
+  const ch=pt.p<=30000;
+  const c=lc(pt.sl);
+  let bdgs='';
+  if(pt.t==='t') bdgs+=`<span class="bdg bdg-pt">PT샵</span>`;
+  else if(pt.b) bdgs+=`<span class="bdg bdg-g">대형GYM</span>`;
+  else bdgs+=`<span class="bdg bdg-g">GYM</span>`;
+  if(pt.lg) bdgs+=`<span class="bdg bdg-lg">👑 LEGEND</span>`;
+  if(pt.vt) bdgs+=`<span class="bdg bdg-vt">🔥 고인물</span>`;
+  if(pt.aw) bdgs+=`<span class="bdg bdg-aw">🏆 IFBB Pro</span>`;
+  if(pt.w) bdgs+=`<span class="bdg" style="background:rgba(255,111,168,.15);color:#FF6FA8;border:1px solid rgba(255,111,168,.3)">👩 여성</span>`;
+  const stars='★'.repeat(Math.floor(pt.r))+'☆'.repeat(5-Math.floor(pt.r));
+  const ev=pt.ev?`<div class="pev">🎉 ${pt.ev}</div>`:'';
+  const tgs=pt.tg.map(t=>`<span class="ptg">${t}</span>`).join('');
+  return `<div class="kpop">
+    <div class="kpopi">
+      <button class="kpopc" onclick="closePopup()">✕</button>
+      <div class="ptop"><div class="pnm">${pt.n}</div><div class="ppr ${ch?'ch':''}">${pr}</div></div>
+      <div class="pbdgs">${bdgs}</div>
+      <div class="pstn"><span class="psd" style="background:${c}"></span>${pt.sl} ${pt.s}</div>
+      <div class="pstr"><span style="color:#FFD600;font-size:13px">${stars}</span><strong style="color:#F0F2FF">${pt.r}</strong><span style="color:#8890AA">(${pt.rv})</span></div>
+      <div class="padr">📍 ${pt.a}</div>
+      ${ev}
+      <div class="ptgs">${tgs}</div>
+    </div>
+  </div>`;
+}
+
+// ===================== 카드 HTML =====================
+function makeCardHTML(pt){
+  const pr=`${(pt.p/10000).toFixed(0)}만원~`;
+  const ch=pt.p<=30000;
+  const c=lc(pt.sl);
+  const stars='★'.repeat(Math.floor(pt.r))+'☆'.repeat(5-Math.floor(pt.r));
+  let bdgs='';
+  if(pt.t==='t') bdgs+=`<span class="bdg bdg-pt">PT</span>`;
+  else if(pt.b) bdgs+=`<span class="bdg bdg-g">대형GYM</span>`;
+  else bdgs+=`<span class="bdg bdg-g">GYM</span>`;
+  if(pt.lg) bdgs+=`<span class="bdg bdg-lg">👑</span>`;
+  if(pt.vt) bdgs+=`<span class="bdg bdg-vt">🔥</span>`;
+  if(pt.aw) bdgs+=`<span class="bdg bdg-aw">🏆</span>`;
+  const evbdg=pt.ev?`<span class="bdg bdg-ev">이벤트</span>`:'';
+  const evbar=pt.ev?`<div class="evbar">${pt.ev}</div>`:'';
+  const tgs=pt.tg.slice(0,4).map(t=>`<span class="pctg">${t}</span>`).join('');
+  const evc=pt.ev?' evc':'';
+  return `<div class="ptc${evc}" id="c${pt.id}" onclick="goToPt(${pt.id})">
+    <div class="pch"><div class="pcn">${pt.n}</div><div class="pcp ${ch?'cheap':''}">${pr}</div></div>
+    <div class="pcm">${bdgs}${evbdg}<div style="display:flex;align-items:center;gap:2px;font-size:11px"><span style="color:#FFD600;font-size:10px">${stars}</span><span style="font-weight:700;color:var(--text);margin-left:2px">${pt.r}</span><span style="color:var(--text2)"> (${pt.rv})</span></div></div>
+    <div class="pcstn"><span class="sdot" style="background:${c}"></span>${pt.sl} ${pt.s}</div>
+    ${evbar}
+    <div class="pcadr">${pt.a}</div>
+    <div class="pctgs">${tgs}</div>
+  </div>`;
+}
+
+// ===================== 필터 =====================
+function getFiltered(){
+  return DATA.filter(pt=>{
+    if(F.type==='trainer'&&pt.t!=='t') return false;
+    if(F.type==='gym'&&pt.t!=='g') return false;
+    if(pt.p>F.maxP) return false;
+    if(pt.r<F.minR) return false;
+    if(F.q){const q=F.q;if(!pt.n.includes(q)&&!pt.s.includes(q)&&!pt.a.includes(q)&&!pt.tg.some(t=>t.includes(q))) return false;}
+    if(F.chips.has('legend')&&!pt.lg) return false;
+    if(F.chips.has('veteran')&&!pt.vt) return false;
+    if(F.chips.has('award')&&!pt.aw) return false;
+    if(F.chips.has('women')&&!pt.w) return false;
+    if(F.chips.has('popular')&&pt.rv<100) return false;
+    return true;
+  });
+}
+function getSorted(arr){
+  const s=document.getElementById('srtsel').value;
+  return [...arr].sort((a,b)=>{
+    if(s==='price_asc') return a.p-b.p;
+    if(s==='price_desc') return b.p-a.p;
+    if(s==='reviews') return b.rv-a.rv;
+    return b.r-a.r||b.rv-a.rv;
+  });
+}
+function renderList(){
+  const items=getSorted(getFiltered());
+  document.getElementById('rcnt').textContent=items.length;
+  document.getElementById('rlist').innerHTML=items.length
+    ?items.map(makeCardHTML).join('')
+    :'<div class="empty"><big>🔍</big><br>검색 결과 없음</div>';
+}
+function updateMarkers(){
+  if(!myMap) return;
+  const vis=new Set(getFiltered().map(p=>p.id));
+  Object.entries(ovsMap).forEach(([id,ov])=>{ov.setMap(vis.has(+id)?myMap:null);});
+}
+function applyF(){
+  F.q=document.getElementById('sinput').value.trim();
+  renderList();
+  updateMarkers();
+  closePopup();
+}
+function setType(t,btn){
+  F.type=t;
+  ['tb-all','tb-t','tb-g'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  btn.classList.add('on'); applyF();
+}
+function updatePrice(v){
+  F.maxP=+v;
+  document.getElementById('pdis').textContent=+v>=100000?'10만원':`${+v/10000}만원`;
+  applyF();
+}
+function setRating(r,btn){
+  F.minR=+r;
+  ['rb-all','rb-4','rb-45'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  btn.classList.add('on'); applyF();
+}
+function clearSrch(){document.getElementById('sinput').value='';F.q='';applyF();}
+function toggleChip(key,btn){
+  if(F.chips.has(key)){F.chips.delete(key);btn.classList.remove('on');}
+  else{F.chips.add(key);btn.classList.add('on');}
+  applyF();
+}
+
+// ===================== 팝업 =====================
+function closePopup(){
+  if(popOv){popOv.setMap(null);popOv=null;}
+  if(selId!==null){
+    const c=document.getElementById('c'+selId);
+    if(c) c.classList.remove('sel');
+    const pb=document.getElementById('pb-'+selId);
+    if(pb) pb.style.boxShadow='0 3px 10px rgba(0,0,0,.4)';
+    selId=null;
+  }
+}
+function handlePinClick(id){
+  if(selId===id){closePopup();return;}
+  closePopup();
+  const pt=DATA.find(d=>d.id===id);
+  if(!pt) return;
+  selId=id;
+  document.querySelectorAll('.ptc').forEach(el=>el.classList.remove('sel'));
+  const card=document.getElementById('c'+id);
+  if(card){card.classList.add('sel');card.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  const pb=document.getElementById('pb-'+id);
+  if(pb) pb.style.boxShadow='0 0 0 4px rgba(0,180,255,.7),0 3px 16px rgba(0,180,255,.9)';
+  
+  const el=document.createElement('div');
+  el.innerHTML=makePopHTML(pt);
+  popOv=new kakao.maps.CustomOverlay({
+    position:new kakao.maps.LatLng(pt.lat,pt.lng),
+    content:el,
+    yAnchor:1.4,
+    zIndex:100
+  });
+  popOv.setMap(myMap);
+  myMap.setCenter(new kakao.maps.LatLng(pt.lat,pt.lng));
+}
+function goToPt(id){
+  handlePinClick(id);
+  if(window.innerWidth<=700){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sbov').classList.remove('open');
+  }
+}
+
+// ===================== 지도 초기화 =====================
+function initMap(){
+  const container=document.getElementById('map');
+  const options={center:new kakao.maps.LatLng(37.5183,126.9622),level:10};
+  myMap=new kakao.maps.Map(container,options);
+  myMap.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+
+  DATA.forEach(pt=>{
+    const el=document.createElement('div');
+    el.innerHTML=makePinHTML(pt);
+    const ov=new kakao.maps.CustomOverlay({
+      position:new kakao.maps.LatLng(pt.lat,pt.lng),
+      content:el,
+      yAnchor:1.2,
+      zIndex:pt.ad?10:pt.b?5:2
+    });
+    ov.setMap(myMap);
+    ovsMap[pt.id]=ov;
+  });
+
+  kakao.maps.event.addListener(myMap,'click',closePopup);
+  renderList();
+}
+
+// ===================== 기타 UI =====================
+function locateMe(){
+  if(!navigator.geolocation){alert('위치 서비스 미지원');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const ll=new kakao.maps.LatLng(pos.coords.latitude,pos.coords.longitude);
+    myMap.setCenter(ll);myMap.setLevel(5);
+    const el=document.createElement('div');
+    el.innerHTML='<div style="width:18px;height:18px;background:#FF5500;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 10px rgba(255,85,0,.7)"></div>';
+    new kakao.maps.CustomOverlay({position:ll,content:el,yAnchor:.5}).setMap(myMap);
+  },()=>alert('위치 권한을 허용해주세요'));
+}
+function shareMap(){
+  navigator.clipboard?.writeText(location.href).then(()=>toast('링크 복사됨!')).catch(()=>toast('주소창에서 직접 복사해주세요'));
+}
+function toggleSb(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbov').classList.toggle('open');
+  setTimeout(()=>myMap&&myMap.relayout(),300);
+}
+function toggleBizDrop(e){
+  e.stopPropagation();
+  const d=document.getElementById('bizdrop');
+  d.style.display=d.style.display==='block'?'none':'block';
+}
+function hideBizDrop(){document.getElementById('bizdrop').style.display='none';}
+function openModal(name){document.getElementById('modal-'+name).style.display='flex';}
+function closeModal(name){document.getElementById('modal-'+name).style.display='none';}
+function cpEmail(){navigator.clipboard?.writeText('sinyouil@naver.com');toast('이메일 복사됨!');}
+function cpKakao(){navigator.clipboard?.writeText('612형');toast('카카오 ID 복사됨!');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
+
+document.addEventListener('click',e=>{if(!e.target.closest('#bizwrap'))hideBizDrop();});
+
+// ===================== 카카오맵 로드 =====================
+// 5초 후 강제로 로딩 숨기기 (SDK 실패해도 UI는 보이게)
+setTimeout(()=>{
+  const l=document.getElementById('loading');
+  if(l.style.display!=='none'){
+    l.innerHTML='<div style="color:#FF5500;font-family:Noto Sans KR,sans-serif;text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:12px">🗺️</div><div style="font-size:16px;font-weight:700;margin-bottom:8px">지도 로딩 실패</div><div style="font-size:12px;color:#8890AA;line-height:1.8">카카오 API는 등록된 도메인에서만 작동해요<br><strong style="color:#FF5500">ptmap.vercel.app</strong> 에서 확인해주세요<br><br>또는 카카오 개발자 콘솔에서<br>도메인 등록을 확인해주세요</div></div>';
+    l.style.opacity='1';
+  }
+},5000);
+
+if(typeof kakao==='undefined'){
+  setTimeout(()=>{
+    const l=document.getElementById('loading');
+    l.innerHTML='<div style="color:#FF5500;font-family:Noto Sans KR,sans-serif;text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:12px">⚠️</div><div style="font-size:16px;font-weight:700;margin-bottom:8px">카카오 SDK 로드 실패</div><div style="font-size:12px;color:#8890AA;line-height:1.8">로컬 파일은 지원되지 않아요<br><strong style="color:#FF5500">ptmap.vercel.app</strong> 에서 확인해주세요</div></div>';
+  },1000);
+}else{
+  kakao.maps.load(function(){
+    try{
+      initMap();
+    }catch(e){
+      console.error('지도 초기화 오류:',e);
+      const l=document.getElementById('loading');
+      l.innerHTML='<div style="color:#FF5500;font-family:Noto Sans KR,sans-serif;text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:12px">⚠️</div><div style="font-size:16px;font-weight:700;margin-bottom:8px">초기화 오류</div><div style="font-size:12px;color:#8890AA">' + e.message + '</div></div>';
+      return;
+    }
+    setTimeout(()=>{
+      const l=document.getElementById('loading');
+      l.style.opacity='0';
+      setTimeout(()=>l.style.display='none',500);
+    },600);
+  });
+}
+</script>
+
+
+</body></html>
